@@ -1,0 +1,24 @@
+<% pageTitle = 'Author Login' %>
+<%- include('../partials/header') %>
+
+<main>
+  <div class="login-shell">
+    <h1>Author Desk</h1>
+    <% if (error) { %>
+      <p class="error-message"><%= error %></p>
+    <% } %>
+    <form method="POST" action="/admin/login" class="form-grid">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autofocus />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      <button type="submit" class="btn">Log in</button>
+    </form>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

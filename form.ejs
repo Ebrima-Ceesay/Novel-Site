@@ -1,0 +1,52 @@
+<% pageTitle = novel && novel.id ? 'Edit Novel' : 'Add a Novel' %>
+<%- include('../partials/header') %>
+
+<div class="admin-bar">
+  <a href="/admin">&larr; Back to Author Desk</a>
+</div>
+
+<main>
+  <h1><%= novel && novel.id ? 'Edit Novel' : 'Add a Novel' %></h1>
+
+  <div class="form-shell">
+    <% if (error) { %>
+      <p class="error-message"><%= error %></p>
+    <% } %>
+
+    <form method="POST" action="<%= novel && novel.id ? '/admin/novels/' + novel.id : '/admin/novels' %>" class="form-grid">
+      <div class="field">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required value="<%= novel ? novel.title : '' %>" />
+      </div>
+
+      <div class="field">
+        <label for="genre">Genre / tag (optional)</label>
+        <input type="text" id="genre" name="genre" placeholder="e.g. Fantasy, Romance, Sci-Fi" value="<%= novel ? novel.genre : '' %>" />
+      </div>
+
+      <div class="field">
+        <label for="coverUrl">Cover image URL (optional)</label>
+        <input type="url" id="coverUrl" name="coverUrl" placeholder="https://..." value="<%= novel ? novel.coverUrl : '' %>" />
+        <p class="helper-text">Paste a link to an image hosted elsewhere (e.g. Imgur, Unsplash). Leave blank for a plain cover.</p>
+      </div>
+
+      <div class="field">
+        <label for="description">Short description</label>
+        <textarea id="description" name="description" rows="3" placeholder="A one or two sentence summary shown on the catalog card."><%= novel ? novel.description : '' %></textarea>
+      </div>
+
+      <div class="field">
+        <label for="content">Story content</label>
+        <textarea id="content" name="content" rows="20" placeholder="Write or paste your story here. Leave a blank line between paragraphs. You can use Markdown: # Chapter One, **bold**, *italic*, and --- for a scene break."><%= novel ? novel.content : '' %></textarea>
+        <p class="helper-text">Supports basic Markdown — blank lines for paragraphs, # for headings, ** for bold, * for italics, --- for a divider.</p>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn"><%= novel && novel.id ? 'Save changes' : 'Publish novel' %></button>
+        <a class="btn btn-outline" href="/admin">Cancel</a>
+      </div>
+    </form>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

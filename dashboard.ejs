@@ -1,0 +1,50 @@
+<% pageTitle = 'Author Desk' %>
+<%- include('../partials/header') %>
+
+<div class="admin-bar">
+  Logged in as the author &mdash;
+  <form method="POST" action="/admin/logout" style="display:inline">
+    <button type="submit" style="background:none;border:none;color:inherit;text-decoration:underline;cursor:pointer;font:inherit;">Log out</button>
+  </form>
+</div>
+
+<main>
+  <div class="dashboard-header">
+    <h1>Author Desk</h1>
+    <a class="btn" href="/admin/novels/new">+ Add a novel</a>
+  </div>
+
+  <% if (novels.length === 0) { %>
+    <p class="empty-shelf">Nothing published yet. Click "Add a novel" to publish your first story.</p>
+  <% } else { %>
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Genre</th>
+          <th>Reactions</th>
+          <th>Last updated</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% novels.forEach(function(novel) { %>
+          <tr>
+            <td><a href="/novel/<%= novel.slug %>" target="_blank"><%= novel.title %></a></td>
+            <td><%= novel.genre || '—' %></td>
+            <td>👍 <%= novel.likes || 0 %> &nbsp; ❤️ <%= novel.loves || 0 %> &nbsp; 👎 <%= novel.dislikes || 0 %></td>
+            <td><%= new Date(novel.updatedAt).toLocaleString() %></td>
+            <td class="row-actions">
+              <a class="btn btn-outline" href="/admin/novels/<%= novel.id %>/edit">Edit</a>
+              <form method="POST" action="/admin/novels/<%= novel.id %>/delete" onsubmit="return confirm('Delete &quot;<%= novel.title %>&quot;? This cannot be undone.');">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>
