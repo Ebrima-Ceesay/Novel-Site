@@ -1,156 +1,61 @@
-/*!
- * body-parser
- * Copyright(c) 2014-2015 Douglas Christopher Wilson
- * MIT Licensed
- */
+'use strict';
 
-'use strict'
+var test = require('tape');
 
-/**
- * Module dependencies.
- * @private
- */
+var callBound = require('../');
 
-var deprecate = require('depd')('body-parser')
+/** @template {true} T @template U @typedef {T extends U ? T : never} AssertType */
 
-/**
- * Cache of loaded parsers.
- * @private
- */
+test('callBound', function (t) {
+	// static primitive
+	t.equal(callBound('Array.length'), Array.length, 'Array.length yields itself');
+	t.equal(callBound('%Array.length%'), Array.length, '%Array.length% yields itself');
 
-var parsers = Object.create(null)
+	// static non-function object
+	t.equal(callBound('Array.prototype'), Array.prototype, 'Array.prototype yields itself');
+	t.equal(callBound('%Array.prototype%'), Array.prototype, '%Array.prototype% yields itself');
+	t.equal(callBound('Array.constructor'), Array.constructor, 'Array.constructor yields itself');
+	t.equal(callBound('%Array.constructor%'), Array.constructor, '%Array.constructor% yields itself');
 
-/**
- * @typedef Parsers
- * @type {function}
- * @property {function} json
- * @property {function} raw
- * @property {function} text
- * @property {function} urlencoded
- */
+	// static function
+	t.equal(callBound('Date.parse'), Date.parse, 'Date.parse yields itself');
+	t.equal(callBound('%Date.parse%'), Date.parse, '%Date.parse% yields itself');
 
-/**
- * Module exports.
- * @type {Parsers}
- */
+	// prototype primitive
+	t.equal(callBound('Error.prototype.message'), Error.prototype.message, 'Error.prototype.message yields itself');
+	t.equal(callBound('%Error.prototype.message%'), Error.prototype.message, '%Error.prototype.message% yields itself');
 
-exports = module.exports = deprecate.function(bodyParser,
-  'bodyParser: use individual json/urlencoded middlewares')
+	var x = callBound('Object.prototype.toString');
+	var y = callBound('%Object.prototype.toString%');
 
-/**
- * JSON parser.
- * @public
- */
+	// prototype function
+	t.notEqual(x, Object.prototype.toString, 'Object.prototype.toString does not yield itself');
+	t.notEqual(y, Object.prototype.toString, '%Object.prototype.toString% does not yield itself');
+	t.equal(x(true), Object.prototype.toString.call(true), 'call-bound Object.prototype.toString calls into the original');
+	t.equal(y(true), Object.prototype.toString.call(true), 'call-bound %Object.prototype.toString% calls into the original');
 
-Object.defineProperty(exports, 'json', {
-  configurable: true,
-  enumerable: true,
-  get: createParserGetter('json')
-})
+	t['throws'](
+		// @ts-expect-error
+		function () { callBound('does not exist'); },
+		SyntaxError,
+		'nonexistent intrinsic throws'
+	);
+	t['throws'](
+		// @ts-expect-error
+		function () { callBound('does not exist', true); },
+		SyntaxError,
+		'allowMissing arg still throws for unknown intrinsic'
+	);
 
-/**
- * Raw parser.
- * @public
- */
+	t.test('real but absent intrinsic', { skip: typeof WeakRef !== 'undefined' }, function (st) {
+		st['throws'](
+			function () { callBound('WeakRef'); },
+			TypeError,
+			'real but absent intrinsic throws'
+		);
+		st.equal(callBound('WeakRef', true), undefined, 'allowMissing arg avoids exception');
+		st.end();
+	});
 
-Object.defineProperty(exports, 'raw', {
-  configurable: true,
-  enumerable: true,
-  get: createParserGetter('raw')
-})
-
-/**
- * Text parser.
- * @public
- */
-
-Object.defineProperty(exports, 'text', {
-  configurable: true,
-  enumerable: true,
-  get: createParserGetter('text')
-})
-
-/**
- * URL-encoded parser.
- * @public
- */
-
-Object.defineProperty(exports, 'urlencoded', {
-  configurable: true,
-  enumerable: true,
-  get: createParserGetter('urlencoded')
-})
-
-/**
- * Create a middleware to parse json and urlencoded bodies.
- *
- * @param {object} [options]
- * @return {function}
- * @deprecated
- * @public
- */
-
-function bodyParser (options) {
-  // use default type for parsers
-  var opts = Object.create(options || null, {
-    type: {
-      configurable: true,
-      enumerable: true,
-      value: undefined,
-      writable: true
-    }
-  })
-
-  var _urlencoded = exports.urlencoded(opts)
-  var _json = exports.json(opts)
-
-  return function bodyParser (req, res, next) {
-    _json(req, res, function (err) {
-      if (err) return next(err)
-      _urlencoded(req, res, next)
-    })
-  }
-}
-
-/**
- * Create a getter for loading a parser.
- * @private
- */
-
-function createParserGetter (name) {
-  return function get () {
-    return loadParser(name)
-  }
-}
-
-/**
- * Load a parser module.
- * @private
- */
-
-function loadParser (parserName) {
-  var parser = parsers[parserName]
-
-  if (parser !== undefined) {
-    return parser
-  }
-
-  // this uses a switch for static require analysis
-  switch (parserName) {
-    case 'json':
-      parser = require('./lib/types/json')
-      break
-    case 'raw':
-      parser = require('./lib/types/raw')
-      break
-    case 'text':
-      parser = require('./lib/types/text')
-      break
-    case 'urlencoded':
-      parser = require('./lib/types/urlencoded')
-      break
-  }
-
-  // store to prevent invoking require()
-  return (parsers[parserName] = parser)
-}
+	t.end();
+});

@@ -1,0 +1,36 @@
+<% pageTitle = novel.title %>
+<%- include('partials/header') %>
+
+<main class="novel-page">
+  <div class="novel-header">
+    <% if (novel.coverUrl) { %>
+      <div class="novel-cover" style="background-image:url('<%= novel.coverUrl %>'); background-size:cover; background-position:center;"></div>
+    <% } else { %>
+      <div class="novel-cover no-image"><%= novel.title %></div>
+    <% } %>
+    <div class="novel-meta">
+      <% if (novel.genre) { %><span class="card-genre"><%= novel.genre %></span><% } %>
+      <h1><%= novel.title %></h1>
+      <p class="novel-description"><%= novel.description %></p>
+
+      <div class="stamp-panel" data-novel-id="<%= novel.id %>">
+        <button class="stamp-btn" data-type="likes">
+          👍 Like <span class="count" data-count="likes"><%= novel.likes || 0 %></span>
+        </button>
+        <button class="stamp-btn" data-type="loves">
+          ❤️ Love <span class="count" data-count="loves"><%= novel.loves || 0 %></span>
+        </button>
+        <button class="stamp-btn" data-type="dislikes">
+          👎 Dislike <span class="count" data-count="dislikes"><%= novel.dislikes || 0 %></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <article class="novel-content">
+    <%- contentHtml %>
+  </article>
+</main>
+
+<script src="/js/reactions.js"></script>
+<%- include('partials/footer') %>

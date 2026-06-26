@@ -1,0 +1,516 @@
+/* ============================================================
+   Design tokens
+   ============================================================ */
+:root {
+  --ink: #242220;
+  --ink-soft: #4a4640;
+  --paper: #e9e3d3;
+  --paper-card: #f7f3e8;
+  --maroon: #7a2e2e;
+  --maroon-dark: #5e2222;
+  --forest: #34402f;
+  --gold: #af8a45;
+  --line: #c9bfa3;
+  --shadow: rgba(36, 34, 32, 0.18);
+
+  --font-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "IBM Plex Mono", "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(36,34,32,0.05) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+a { color: var(--maroon); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+:focus-visible {
+  outline: 2px solid var(--maroon);
+  outline-offset: 2px;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0 0 0.4em;
+  color: var(--ink);
+}
+
+img { max-width: 100%; display: block; }
+
+/* ============================================================
+   Site header — looks like a library catalog drawer label
+   ============================================================ */
+.site-header {
+  background: var(--ink);
+  color: var(--paper-card);
+  padding: 1.4rem 1.5rem;
+  border-bottom: 6px solid var(--gold);
+}
+
+.site-header .header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.site-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.02em;
+  color: var(--paper-card);
+  margin: 0;
+}
+
+.site-title a { color: inherit; }
+.site-title a:hover { text-decoration: none; opacity: 0.85; }
+
+.site-nav a {
+  color: var(--paper-card);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-left: 1.2rem;
+  opacity: 0.9;
+}
+.site-nav a:hover { opacity: 1; text-decoration: underline; }
+
+/* ============================================================
+   Layout shell
+   ============================================================ */
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.catalog-intro {
+  margin-bottom: 2.2rem;
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 1.2rem;
+}
+
+.catalog-intro h1 {
+  font-size: 2.1rem;
+}
+
+.catalog-intro p {
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+  max-width: 60ch;
+}
+
+/* ============================================================
+   Catalog grid + index cards (the signature element)
+   ============================================================ */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.6rem;
+}
+
+.index-card {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 0 -2px var(--shadow), 0 8px 14px -8px var(--shadow);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.index-card::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.index-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 0 -3px var(--shadow), 0 16px 22px -10px var(--shadow);
+}
+
+.index-card .card-cover {
+  height: 150px;
+  background: var(--ink);
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.index-card .card-cover.no-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  color: var(--paper-card);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-align: center;
+  padding: 0.5rem;
+  background: linear-gradient(135deg, var(--forest), var(--ink));
+}
+
+.card-body {
+  padding: 1.1rem 1.2rem 1.3rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.catalog-number {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3rem;
+}
+
+.card-body h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+}
+
+.card-genre {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--forest);
+  border: 1px solid var(--forest);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  margin-bottom: 0.6rem;
+  transform: rotate(-1deg);
+  width: fit-content;
+}
+
+.card-description {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  flex: 1;
+  margin-bottom: 0.8rem;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px dashed var(--line);
+  padding-top: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.reaction-counts {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.empty-shelf {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+}
+
+/* ============================================================
+   Single novel page
+   ============================================================ */
+.novel-page .novel-header {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.novel-cover {
+  width: 200px;
+  min-width: 160px;
+  height: 280px;
+  background: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: 4px 4px 0 var(--gold);
+}
+
+.novel-cover.no-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--paper-card);
+  font-family: var(--font-display);
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--forest), var(--ink));
+}
+
+.novel-meta { flex: 1; min-width: 240px; }
+
+.novel-meta h1 { font-size: 2.2rem; margin-bottom: 0.3rem; }
+
+.novel-description {
+  color: var(--ink-soft);
+  margin: 0.8rem 0 1.2rem;
+  max-width: 60ch;
+}
+
+.novel-content {
+  max-width: 68ch;
+  font-size: 1.05rem;
+}
+
+.novel-content p { margin: 0 0 1.2em; }
+.novel-content h1, .novel-content h2, .novel-content h3 {
+  margin-top: 1.6em;
+}
+.novel-content hr {
+  border: none;
+  border-top: 1px dashed var(--line);
+  margin: 2.5em 0;
+}
+
+/* ============================================================
+   Reaction stamps (like/love/dislike)
+   ============================================================ */
+.stamp-panel {
+  display: flex;
+  gap: 0.8rem;
+  margin: 1.4rem 0 2.4rem;
+  flex-wrap: wrap;
+}
+
+.stamp-btn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--paper-card);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  padding: 0.55rem 1rem;
+  border-radius: 3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.1s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.stamp-btn:hover {
+  transform: rotate(-1deg) scale(1.03);
+}
+
+.stamp-btn .count {
+  font-weight: 700;
+}
+
+.stamp-btn[data-type="likes"].active {
+  background: var(--forest); color: var(--paper-card); border-color: var(--forest);
+}
+.stamp-btn[data-type="loves"].active {
+  background: var(--maroon); color: var(--paper-card); border-color: var(--maroon);
+}
+.stamp-btn[data-type="dislikes"].active {
+  background: var(--ink-soft); color: var(--paper-card); border-color: var(--ink-soft);
+}
+
+/* ============================================================
+   Admin area
+   ============================================================ */
+.admin-bar {
+  background: var(--forest);
+  color: var(--paper-card);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  text-align: center;
+  padding: 0.4rem;
+  letter-spacing: 0.04em;
+}
+
+.admin-bar a { color: var(--paper-card); text-decoration: underline; }
+
+.login-shell {
+  max-width: 380px;
+  margin: 4rem auto;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  padding: 2.2rem;
+  box-shadow: 0 8px 20px -10px var(--shadow);
+}
+
+.login-shell h1 { font-size: 1.5rem; margin-bottom: 1.2rem; text-align: center; }
+
+.field { margin-bottom: 1.1rem; display: flex; flex-direction: column; gap: 0.35rem; }
+
+label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+input[type="text"], input[type="password"], input[type="url"], textarea, select {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 2px;
+}
+
+textarea { font-family: var(--font-mono); font-size: 0.92rem; resize: vertical; }
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper-card);
+  padding: 0.6rem 1.1rem;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-block;
+}
+.btn:hover { background: var(--maroon-dark); border-color: var(--maroon-dark); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+}
+.btn-outline:hover { background: var(--ink); color: var(--paper-card); }
+
+.btn-danger {
+  background: var(--maroon);
+  border-color: var(--maroon);
+}
+.btn-danger:hover { background: var(--maroon-dark); border-color: var(--maroon-dark); }
+
+.error-message {
+  background: #f6e4e1;
+  border: 1px solid var(--maroon);
+  color: var(--maroon-dark);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+}
+
+.dashboard-table th, .dashboard-table td {
+  text-align: left;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.dashboard-table th {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  background: var(--paper);
+}
+
+.row-actions { display: flex; gap: 0.6rem; }
+.row-actions form { display: inline; }
+
+.form-shell {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  padding: 1.8rem;
+  max-width: 700px;
+}
+
+.form-grid { display: flex; flex-direction: column; gap: 1.1rem; }
+
+.helper-text {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin-top: -0.2rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+}
+
+/* ============================================================
+   404
+   ============================================================ */
+.not-found {
+  text-align: center;
+  padding: 5rem 1rem;
+}
+.not-found h1 { font-size: 3rem; }
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.site-footer {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  padding: 2rem 1rem 3rem;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 600px) {
+  .novel-page .novel-header { flex-direction: column; }
+  .novel-cover { width: 100%; height: 220px; }
+  .site-nav a { margin-left: 0.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

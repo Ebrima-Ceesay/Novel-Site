@@ -1,0 +1,43 @@
+<% pageTitle = 'Catalog' %>
+<%- include('partials/header') %>
+
+<main>
+  <div class="catalog-intro">
+    <h1>The Catalog</h1>
+    <p>Browse what's been published so far. Click a card to open the full story.</p>
+  </div>
+
+  <% if (novels.length === 0) { %>
+    <p class="empty-shelf">The shelves are empty. The author hasn't published anything yet — head to the Author Desk to add the first one.</p>
+  <% } else { %>
+    <div class="catalog-grid">
+      <% novels.forEach(function(novel, i) { %>
+        <a class="index-card-link" href="/novel/<%= novel.slug %>" style="text-decoration:none;">
+          <article class="index-card">
+            <% if (novel.coverUrl) { %>
+              <div class="card-cover" style="background-image:url('<%= novel.coverUrl %>')"></div>
+            <% } else { %>
+              <div class="card-cover no-image"><%= novel.title %></div>
+            <% } %>
+            <div class="card-body">
+              <p class="catalog-number">NO. <%= String(i + 1).padStart(3, '0') %></p>
+              <h2><%= novel.title %></h2>
+              <% if (novel.genre) { %><span class="card-genre"><%= novel.genre %></span><% } %>
+              <p class="card-description"><%= novel.description %></p>
+              <div class="card-footer">
+                <span>Updated <%= new Date(novel.updatedAt).toLocaleDateString() %></span>
+                <span class="reaction-counts">
+                  <span title="Likes">👍 <%= novel.likes || 0 %></span>
+                  <span title="Loves">❤️ <%= novel.loves || 0 %></span>
+                  <span title="Dislikes">👎 <%= novel.dislikes || 0 %></span>
+                </span>
+              </div>
+            </div>
+          </article>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>
